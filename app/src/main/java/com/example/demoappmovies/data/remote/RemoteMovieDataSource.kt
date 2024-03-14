@@ -8,13 +8,13 @@ import com.example.demoappmovies.repository.WebService
 //Despues de crear el modelo se venimos al DataSource que es el lugar a donde iremos a buscar la información que necesitamos y creamos 3
 //metodos, simplemente anotando lo que necesitamos traer, la listas getUpcoming,getTopRated y getPopular, retornando así una lista de peliculas.
 
-class MovieDataSource(private val webService: WebService) {
+class RemoteMovieDataSource(private val webService: WebService) {
 
     suspend fun getNowPlayingMovies() : MovieList = webService.getNowPlayingMovies(AppConstants.API_KEY)
 
     suspend fun getUpComingMovies(): MovieList = webService.getUpComingMovies(AppConstants.API_KEY)
 
-    suspend fun getUpRatedMovies(): MovieList = webService.getTopRatedMovies(AppConstants.API_KEY)
+    suspend fun getTopRatedMovies(): MovieList = webService.getTopRatedMovies(AppConstants.API_KEY)
 
     suspend fun getPopularMovies(): MovieList = webService.getPopularMovies(AppConstants.API_KEY)
 

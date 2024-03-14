@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import com.example.demoappmovies.R
 import com.example.demoappmovies.core.Resource
 import com.example.demoappmovies.data.model.Movie
-import com.example.demoappmovies.data.remote.MovieDataSource
+import com.example.demoappmovies.data.remote.RemoteMovieDataSource
 import com.example.demoappmovies.databinding.FragmentMovieBinding
 import com.example.demoappmovies.presentation.MovieViewModel
 import com.example.demoappmovies.presentation.MovieViewModelFactory
@@ -22,14 +22,13 @@ import com.example.demoappmovies.ui.movie.adapters.concat.NowPlayingConcatAdapte
 import com.example.demoappmovies.ui.movie.adapters.concat.PopularConcatAdapter
 import com.example.demoappmovies.ui.movie.adapters.concat.TopRatedConcatAdapter
 import com.example.demoappmovies.ui.movie.adapters.concat.UpcomingConcatAdapter
-import kotlin.math.log
 
 
 class MovieFragment : Fragment(R.layout.fragment_movie), MovieAdapter.OnMovieClickListener{
 
     private lateinit var binding: FragmentMovieBinding
     private val viewModel by viewModels<MovieViewModel> { MovieViewModelFactory(MovieRepositoryImpl(
-        MovieDataSource(RetrofitClient.webservice)
+        RemoteMovieDataSource(RetrofitClient.webservice)
     )) }
 
     //Para hacer el Set Up del ConcatAdapter, se genera la instancia del ConcatAdapter
