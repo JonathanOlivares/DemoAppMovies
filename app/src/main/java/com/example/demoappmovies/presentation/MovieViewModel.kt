@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
 import com.example.demoappmovies.core.Resource
-import com.example.demoappmovies.repository.MovieRepository
+import com.example.demoappmovies.domain.MovieRepository
 import kotlinx.coroutines.Dispatchers
 
 
@@ -14,7 +14,7 @@ class MovieViewModel(private val repo: MovieRepository): ViewModel() {
         emit(Resource.Loading())
 
         try {
-            emit(Resource.Success(NTuple4(repo.getNowPlayingMovies() ,repo.getUpComingMovies(),repo.getPopularMovies(),repo.getTopRatedMovies())))
+            emit(Resource.Success(Triple(repo.getUpcomingMovies(),repo.getPopularMovies(),repo.getTopRatedMovies())))
         }catch (e: Exception){
             emit(Resource.Failure(e))
         }
@@ -27,4 +27,5 @@ class MovieViewModelFactory(private  val repo: MovieRepository): ViewModelProvid
     }
 }
 
-data class NTuple4<T1, T2, T3, T4>(val  t1: T1, val t2: T2, val t3: T3, val t4: T4)
+//Para cuando se requieren más repo, más list.
+//data class NTuple4<T1, T2, T3, T4>(val  t1: T1, val t2: T2, val t3: T3, val t4: T4)

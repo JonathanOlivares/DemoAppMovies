@@ -1,4 +1,4 @@
-package com.example.demoappmovies.ui.movie.adapters.concat
+package com.example.demoappmovies.ui.main.adapters.concat
 
 
 import android.content.Context

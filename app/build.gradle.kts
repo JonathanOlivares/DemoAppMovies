@@ -5,6 +5,8 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     //kapt
     id("kotlin-kapt")
+    //Parcelize
+    id("kotlin-parcelize")
 }
 
 android {
@@ -41,14 +43,16 @@ android {
     buildFeatures{
         viewBinding = true
     }
+
+
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.core:core-ktx:1.3.2")
+    implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -60,15 +64,17 @@ dependencies {
     //ViewModel and LiveData KTX
 
     // ViewModel
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
 
     // LiveData
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
+    implementation("android.arch.lifecycle:extensions:1.1.1")
+    kapt("android.arch.lifecycle:compiler:1.1.1")
 
     // Navigation Component
 
-    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.6")
-    implementation ("androidx.navigation:navigation-ui-ktx:2.7.6")
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.3.2")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.3.2")
 
     // Retrofit
 
@@ -85,5 +91,6 @@ dependencies {
     implementation("androidx.room:room-ktx:2.2.6")
     annotationProcessor ("androidx.room:room-compiler:2.2.6")
     kapt("androidx.room:room-compiler:2.2.6")
+
 
 }

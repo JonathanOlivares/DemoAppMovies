@@ -1,11 +1,14 @@
 package com.example.demoappmovies.data.model
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 //Se define el modelo que nos sirve para traer la información que necesitamos del servidor.
 
+@Parcelize
 data class Movie(
     val id: Int = -1,
     val adult: Boolean = false,
@@ -21,13 +24,13 @@ data class Movie(
     val vote_average: Double = -1.0,
     val vote_count: Int = -1,
     val movie_type: String = ""
-)
+): Parcelable
 
 data class MovieList (val results: List<Movie> = listOf())
 
 
 //Room
-@Entity
+@Entity (tableName = "movieEntity")
 data class MovieEntity(
     @PrimaryKey
     val id: Int = -1,
@@ -81,6 +84,23 @@ fun MovieEntity.toMovie(): Movie = Movie(
     this.video,
     this.vote_average,
     this.vote_count,
-    this.movie_type
+
+)
+
+fun Movie.toMovieEntity(movieType: String): MovieEntity = MovieEntity(
+    this.id,
+    this.adult,
+    this.backdrop_path,
+    this.original_title,
+    this.original_language,
+    this.overview,
+    this.popularity,
+    this.poster_path,
+    this.release_date,
+    this.title,
+    this.video,
+    this.vote_average,
+    this.vote_count,
+    movie_type = movieType
 
 )

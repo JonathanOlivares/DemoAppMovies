@@ -1,38 +1,45 @@
-package com.example.demoappmovies.ui.movie
+package com.example.demoappmovies.ui.main
 
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import com.example.demoappmovies.R
 import com.example.demoappmovies.core.Resource
+import com.example.demoappmovies.data.local.AppDatabase
+import com.example.demoappmovies.data.local.LocalMovieDataSource
 import com.example.demoappmovies.data.model.Movie
 import com.example.demoappmovies.data.remote.RemoteMovieDataSource
 import com.example.demoappmovies.databinding.FragmentMovieBinding
 import com.example.demoappmovies.presentation.MovieViewModel
 import com.example.demoappmovies.presentation.MovieViewModelFactory
-import com.example.demoappmovies.repository.MovieRepositoryImpl
-import com.example.demoappmovies.repository.RetrofitClient
-import com.example.demoappmovies.ui.movie.adapters.concat.MovieAdapter
-import com.example.demoappmovies.ui.movie.adapters.concat.NowPlayingConcatAdapter
-import com.example.demoappmovies.ui.movie.adapters.concat.PopularConcatAdapter
-import com.example.demoappmovies.ui.movie.adapters.concat.TopRatedConcatAdapter
-import com.example.demoappmovies.ui.movie.adapters.concat.UpcomingConcatAdapter
+import com.example.demoappmovies.domain.MovieRepositoryImpl
+import com.example.demoappmovies.domain.RetrofitClient
+import com.example.demoappmovies.ui.main.adapters.concat.MovieAdapter
+import com.example.demoappmovies.ui.main.adapters.concat.PopularConcatAdapter
+import com.example.demoappmovies.ui.main.adapters.concat.TopRatedConcatAdapter
+import com.example.demoappmovies.ui.main.adapters.concat.UpcomingConcatAdapter
 
 
 class MovieFragment : Fragment(R.layout.fragment_movie), MovieAdapter.OnMovieClickListener{
 
-    private lateinit var binding: FragmentMovieBinding
-    private val viewModel by viewModels<MovieViewModel> { MovieViewModelFactory(MovieRepositoryImpl(
-        RemoteMovieDataSource(RetrofitClient.webservice)
-    )) }
-
     //Para hacer el Set Up del ConcatAdapter, se genera la instancia del ConcatAdapter
     private lateinit var  concatAdapter: ConcatAdapter
+    private lateinit var binding: FragmentMovieBinding
+    private val viewModel by viewModels<MovieViewModel> {
+        MovieViewModelFactory(
+            MovieRepositoryImpl(
+                RemoteMovieDataSource(RetrofitClient.webservice),
+                LocalMovieDataSource(AppDatabase.getDatabase(requireContext()).movieDao())
+                //requireContext se utiliza porque estamos dentro de un fragmento.
+            )
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,19 +60,19 @@ class MovieFragment : Fragment(R.layout.fragment_movie), MovieAdapter.OnMovieCli
                 is Resource.Success ->{
                     binding.progressBar.visibility = View.GONE
                     concatAdapter.apply {
-                        addAdapter(0,NowPlayingConcatAdapter(MovieAdapter(result.data.t1.results, itemClickListener = this@MovieFragment)))
-                        addAdapter(1,UpcomingConcatAdapter(MovieAdapter(result.data.t2.results, itemClickListener = this@MovieFragment)))
-                        addAdapter(2,PopularConcatAdapter(MovieAdapter(result.data.t3.results, itemClickListener = this@MovieFragment)))
-                        addAdapter(3,TopRatedConcatAdapter(MovieAdapter(result.data.t4.results, itemClickListener = this@MovieFragment)))
+                        addAdapter(0,UpcomingConcatAdapter(MovieAdapter(result.data.first.results, this@MovieFragment)))
+                        addAdapter(1,PopularConcatAdapter(MovieAdapter(result.data.second.results, this@MovieFragment)))
+                        addAdapter(2,TopRatedConcatAdapter(MovieAdapter(result.data.third.results, this@MovieFragment)))
 
                     }
                     //binding del adapter en el RecyclerView principal.
                     binding.rvMovies.adapter = concatAdapter
-                    Log.d("LiveData","NowPlaying: ${result.data.t1} \n \n Upcoming ${result.data.t2} \n \nPopular: ${result.data.t3} \n \nTopRated:${result.data.t4}")
+                    Log.d("LiveData", "Upcoming ${result.data.first} \n \nPopular: ${result.data.second} \n \nTopRated:${result.data.third}")
                 }
                 is Resource.Failure ->{
                     binding.progressBar.visibility = View.GONE
                     Log.d("Error","${result.exception}")
+                    Toast.makeText(requireContext(),"Error: ${result.exception}",Toast.LENGTH_SHORT).show()
                 }
             }
         })

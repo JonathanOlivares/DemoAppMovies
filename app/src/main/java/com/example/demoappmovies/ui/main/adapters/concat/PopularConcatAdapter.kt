@@ -1,23 +1,23 @@
-package com.example.demoappmovies.ui.movie.adapters.concat
+package com.example.demoappmovies.ui.main.adapters.concat
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoappmovies.core.BaseConcatHolder
-import com.example.demoappmovies.databinding.UpcomingMovieRowBinding
-
+import com.example.demoappmovies.databinding.PopularMoviesRowBinding
+import java.lang.IllegalArgumentException
 
 //MovieAdapter es el que le vamos a pasar a ConcatAdapter
-class UpcomingConcatAdapter(private val movieAdapter: MovieAdapter): RecyclerView.Adapter<BaseConcatHolder<*>>(){
+class PopularConcatAdapter(private val movieAdapter: MovieAdapter): RecyclerView.Adapter<BaseConcatHolder<*>>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseConcatHolder<*> {
-        val itemBinding =
-            UpcomingMovieRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val itemBinding =PopularMoviesRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return ConcatViewHolder(itemBinding)
     }
 
     override fun onBindViewHolder(holder: BaseConcatHolder<*>, position: Int) {
         when(holder) {
             is ConcatViewHolder -> holder.bind(movieAdapter)
+            else -> throw IllegalArgumentException("No viewholder to show this data, did you forgot to add it to the onBindViewHolder?")
         }
     }
 
@@ -25,10 +25,11 @@ class UpcomingConcatAdapter(private val movieAdapter: MovieAdapter): RecyclerVie
     override fun getItemCount(): Int = 1
 
 
-    private inner class ConcatViewHolder(val binding: UpcomingMovieRowBinding): BaseConcatHolder<MovieAdapter>(binding.root){
+    private inner class ConcatViewHolder(val binding: PopularMoviesRowBinding): BaseConcatHolder<MovieAdapter>(binding.root){
         override fun bind(adapter: MovieAdapter) {
-            binding.rvUpcomingMovies.adapter = adapter
+            binding.rvPopularMovies.adapter = adapter
         }
 
     }
 }
+
